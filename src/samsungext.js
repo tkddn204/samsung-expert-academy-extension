@@ -8,8 +8,7 @@ $(document).ready(() => {
         if ($container) {
             $container.css('width', '100%');
             const $btnRight = $('.btn_right');
-            $btnRight.find('#mobileSolveBtn').remove();
-            $btnRight.find('.hidden_solve_btn')
+            $btnRight.find('#mobileSolveBtn').remove();$btnRight.find('.hidden_solve_btn')
                 .removeClass('hidden_solve_btn');
             // if ($(window).width() > 1120) {
             //     $('.hidden_solve_htn').css('display', 'inline block');
