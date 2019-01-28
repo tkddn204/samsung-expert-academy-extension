@@ -5,7 +5,16 @@ $(document).ready(() => {
 
     async function loadExtension() {
         const $container = $('.container.sub');
-        if ($container) $container.css('width', '100%');
+        if ($container) {
+            $container.css('width', '100%');
+            const $btnRight = $('.btn_right');
+            $btnRight.find('#mobileSolveBtn').remove();
+            $btnRight.find('.hidden_solve_btn')
+                .removeClass('hidden_solve_btn');
+            // if ($(window).width() > 1120) {
+            //     $('.hidden_solve_htn').css('display', 'inline block');
+            // }
+        }
 
         const $left = $('.problem_left');
         const $right = $('.problem_right');
