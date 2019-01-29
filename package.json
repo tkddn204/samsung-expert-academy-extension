@@ -1,6 +1,6 @@
 {
   "name": "samsung-expert-academy-extension",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "private": true,
   "main": "inject.js",
   "devDependencies": {

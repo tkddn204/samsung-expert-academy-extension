@@ -8,41 +8,69 @@ $(document).ready(() => {
         if ($container) {
             $container.css('width', '100%');
             const $btnRight = $('.btn_right');
-            $btnRight.find('#mobileSolveBtn').remove();$btnRight.find('.hidden_solve_btn')
+            $('.col-md-2').remove();
+            $('#orderBy').css('width', 'auto');
+            $btnRight.find('#mobileSolveBtn').remove();
+            $btnRight.find('.hidden_solve_btn')
                 .removeClass('hidden_solve_btn');
-            // if ($(window).width() > 1120) {
-            //     $('.hidden_solve_htn').css('display', 'inline block');
-            // }
         }
 
         const $left = $('.problem_left');
         const $right = $('.problem_right');
         if ($left && $right) {
             $left.css('visibility', 'hidden');
-            $('.problem_box').css('margin', '100px 0px 0px 0px');
+            $right.css({
+                'left': '0px',
+                'right': '0px',
+                'bottom': '0px',
+                'padding': '10px'
+            });
+
             const $button = $('<div href="#" class="samsungext-toggle">▶</div>');
-            $('.panel-group').before($button);
-            $button.css('font-size', '30px');
+            const $header = $('.header');
+            $header.css({
+                'display': 'flex',
+                'align-items': 'center'
+            });
+            $button.prependTo($header);
+            $button.css({
+                'flex': 'initial',
+                'cursor': 'pointer',
+                'text-align': 'center',
+                'font-size': '30px',
+                'width': '50px',
+                'height': '50px',
+                'margin-left': '10px'
+            });
+            $header.find('h1').css('flex', 'auto');
+            $('.club_name').css({
+                'position': 'static',
+                'margin': '10px 10px 0px'
+            });
 
             $button.on('click', (e) => {
                 e.stopPropagation();
                 const $left = $('.problem_left');
                 const $right = $('.problem_right');
                 if ($left.css('visibility') === 'hidden') {
-                    $('.problem_box').css('margin', '30px 0px 0px 0px');
                     $left.css('visibility', 'visible');
-                    $right.css('position', 'fixed').css('overflow-y', 'scroll');
+                    $right.css({
+                        'left': '385px',
+                        'right': '0px',
+                        'bottom': '0px'
+                    });
                     $button.text('◀');
                 } else {
-                    $('.problem_box').css('margin', '100px 0px 0px 0px');
                     $left.css('visibility', 'hidden');
-                    $right.css('position', 'initial');
+                    $right.css({
+                        'left': '0px',
+                        'right': '0px',
+                        'bottom': '0px'
+                    });
                     $button.text('▶');
                 }
                 return false;
             });
-            $right.css('position', 'initial');
-            $right.css('padding', '10px');
         }
     }
 });
