@@ -8,7 +8,7 @@ $(document).ready(() => {
         if ($container) {
             $container.css('width', '100%');
             const $btnRight = $('.btn_right');
-            $('.col-md-2').remove();
+
             $('#orderBy').css('width', 'auto');
             $btnRight.find('#mobileSolveBtn').remove();
             $btnRight.find('.hidden_solve_btn')
