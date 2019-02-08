@@ -137,10 +137,9 @@ gulp.task('chrome:crx', () => {
   // For the convenience of people who want to build locally without having to
   // Manage their own Chrome key, this code will use the bundled test key if
   // A real key is not found in ~/.ssh.
-  const real = path.join(os.homedir() + '.ssh/chrome.pem');
+  const real = path.join(os.homedir() + '/.ssh/chrome.pem');
   const test = './chrome_test_key.pem';
   const privateKey = fs.existsSync(real) ? fs.readFileSync(real) : fs.readFileSync(test);
-
   return pipe(
     './tmp/chrome',
     $.crxPack({
