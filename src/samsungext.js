@@ -126,34 +126,50 @@ $(document).ready(() => {
             $copyDescription.insertBefore($inOutBox);
 
             const $inputBox = $inOutBox.find('.left');
+
             const $inputTable = $inputBox.find('table');
-            const $inputTableOfTd = $inputTable.find('td');
-            $inputTableOfTd.addClass('input-code');
-            $inputTable.addClass('copy-code-input');
-            $inputTable.attr('data-clipboard-target', '.input-code');
+            if ($inputTable.length !== 0) {
+                const $inputTableOfTd = $inputTable.find('td');
+                $inputTableOfTd.addClass('input-code');
+                $inputTable.addClass('copy-code-input');
+                $inputTable.attr('data-clipboard-target', '.input-code');
+            } else {
+                const $inputSpan = $inputBox.find('.box5').children().eq(1);
+                $inputSpan.addClass('input-code');
+                $inputSpan.addClass('copy-code-input');
+                $inputSpan.attr('data-clipboard-target', '.input-code');
+            }
 
             const $outputBox = $inOutBox.find('.right');
+
             const $outputTable = $outputBox.find('table');
-            const $outputTableOfTd = $outputTable.find('td');
-            $outputTableOfTd.addClass('output-code');
-            $outputTable.addClass('copy-code-output');
-            $outputTable.attr('data-clipboard-target', '.output-code');
+            if ($outputTable.length !== 0) {
+                const $outputTableOfTd = $outputTable.find('td');
+                $outputTableOfTd.addClass('output-code');
+                $outputTable.addClass('copy-code-output');
+                $outputTable.attr('data-clipboard-target', '.output-code');
+            } else {
+                const $outputSpan = $outputBox.find('.box5').children().eq(1);
+                $outputSpan.addClass('output-code');
+                $outputSpan.addClass('copy-code-output');
+                $outputSpan.attr('data-clipboard-target', '.output-code');
+            }
 
             const inputClipboard = new ClipboardJS('.copy-code-input');
             const outputClipboard = new ClipboardJS('.copy-code-output');
 
             inputClipboard.on('success', (e) => {
                 $('.copy-description').html('<b>입력 복사 완료!!</b>');
-                // console.info('Action:', e.action);
-                // console.info('Text:', e.text);
-                // console.info('Trigger:', e.trigger);
+                console.info('Action:', e.action);
+                console.info('Text:', e.text);
+                console.info('Trigger:', e.trigger);
                 e.clearSelection();
             });
             outputClipboard.on('success', (e) => {
                 $('.copy-description').html('<b>출력 복사 완료!!</b>');
-                // console.info('Action:', e.action);
-                // console.info('Text:', e.text);
-                // console.info('Trigger:', e.trigger);
+                console.info('Action:', e.action);
+                console.info('Text:', e.text);
+                console.info('Trigger:', e.trigger);
                 e.clearSelection();
             });
         }

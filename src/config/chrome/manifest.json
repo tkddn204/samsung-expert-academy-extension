@@ -6,7 +6,6 @@
   "author": "SsangWoo",
   "description": "chrome extension for Samsung expert academy",
   "homepage_url": "https://github.com/tkddn204/samsung-expert-academy-extension",
-  "default_locale": "ko",
   "icons": {
     "128": "icons/icon128.png"
   },
