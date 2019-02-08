@@ -4,6 +4,33 @@ $(document).ready(() => {
     parallel(Object.keys(STORE), (key, cb) => store.setIfNull(STORE[key], DEFAULTS[key], cb), loadExtension);
 
     async function loadExtension() {
+
+        /**
+         * Problem List Page
+         *
+         * 모바일 버전에 대응하기 위해 검색 부분 수정
+         */
+        const $searchBar = $('.row.list-navbar-form');
+        if ($searchBar) {
+            $searchBar.css('justify-content', 'flex-end');
+            $searchBar.find('.col-lg-2').remove();
+            $searchBar.find('.col-lg-3').css('flex', '0');
+            $searchBar.find('.col-lg-7').css({
+                flex: '0',
+                maxWidth: '100%'
+            });
+            const $difficultyButtons = $searchBar.find('.hidden-sm-down').find('.btn-group');
+            $difficultyButtons.children().css({
+                width: '100%',
+                padding: '3px 5px'
+            });
+        }
+
+        /**
+         * Problem Page
+         *
+         * 모바일 버전에 대응하기 위해 "문제 풀기" 버튼 조정
+         */
         const $container = $('.container.sub');
         if ($container) {
             $container.css('width', '100%');
@@ -15,6 +42,12 @@ $(document).ready(() => {
                 .removeClass('hidden_solve_btn');
         }
 
+
+        /**
+         * Problem Solving page
+         *
+         * 왼쪽 "제출 결과"를 고정 상태에서 메뉴로써 사용할 수 있도록 변경
+         */
         const $left = $('.problem_left');
         const $right = $('.problem_right');
         if ($left && $right) {
