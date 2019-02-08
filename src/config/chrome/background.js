@@ -20,6 +20,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
             const jsFiles = [
                 'jquery.js',
                 'jquery-ui.js',
+                'clipboard.min.js',
                 'keymaster.js',
                 'ondemand.js',
                 'samsungext.js'

@@ -119,7 +119,43 @@ $(document).ready(() => {
                 }
                 return false;
             });
+
+            // 입출력 복사하는 부분 추가
+            const $inOutBox = $('.box_type1');
+            const $copyDescription = $('<span class="copy-description"><b>★ 코드를 누르면 코드가 복사됩니다 ★</b></span>');
+            $copyDescription.insertBefore($inOutBox);
+
+            const $inputBox = $inOutBox.find('.left');
+            const $inputTable = $inputBox.find('table');
+            const $inputTableOfTd = $inputTable.find('td');
+            $inputTableOfTd.addClass('input-code');
+            $inputTable.addClass('copy-code-input');
+            $inputTable.attr('data-clipboard-target', '.input-code');
+
+            const $outputBox = $inOutBox.find('.right');
+            const $outputTable = $outputBox.find('table');
+            const $outputTableOfTd = $outputTable.find('td');
+            $outputTableOfTd.addClass('output-code');
+            $outputTable.addClass('copy-code-output');
+            $outputTable.attr('data-clipboard-target', '.output-code');
+
+            const inputClipboard = new ClipboardJS('.copy-code-input');
+            const outputClipboard = new ClipboardJS('.copy-code-output');
+
+            inputClipboard.on('success', (e) => {
+                $('.copy-description').html('<b>입력 복사 완료!!</b>');
+                // console.info('Action:', e.action);
+                // console.info('Text:', e.text);
+                // console.info('Trigger:', e.trigger);
+                e.clearSelection();
+            });
+            outputClipboard.on('success', (e) => {
+                $('.copy-description').html('<b>출력 복사 완료!!</b>');
+                // console.info('Action:', e.action);
+                // console.info('Text:', e.text);
+                // console.info('Trigger:', e.trigger);
+                e.clearSelection();
+            });
         }
     }
-
 });
