@@ -91,7 +91,6 @@ gulp.task('chrome', ['chrome:js'], () => {
     pipe(
       [
         './libs/**/*',
-        '!./libs/file-icon.css',
         '!./libs/jstree.css',
         '!./libs/ondemand{,/**}',
         './tmp/samsungext.*',
@@ -100,15 +99,9 @@ gulp.task('chrome', ['chrome:js'], () => {
       dest
     ),
     pipe(
-      './libs/file-icons.css',
-      $.replace('../fonts', `${extRoot}/fonts`),
-      dest
-    ),
-    pipe(
       './libs/jstree.css',
       $.replace('url("32px.png")', `url("${extRoot}/images/32px.png")`),
       $.replace('url("40px.png")', `url("${extRoot}/images/40px.png")`),
-      $.replace('url("throbber.gif")', `url("${extRoot}/images/throbber.gif")`),
       dest
     ),
     pipe(
