@@ -14,11 +14,10 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
             if (chrome.runtime.lastError || res[0]) {
                 return;
             }
-
-            const cssFiles = ['file-icons.css'];
+            
+            // const cssFiles = ['file-icons.css'];
 
             const jsFiles = [
-                'file-icons.js',
                 'jquery.js',
                 'jquery-ui.js',
                 'keymaster.js',
@@ -27,7 +26,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
             ];
 
             eachTask([
-                (cb) => eachItem(cssFiles, inject('insertCSS'), cb),
+                // (cb) => eachItem(cssFiles, inject('insertCSS'), cb),
                 (cb) => eachItem(jsFiles, inject('executeScript'), cb)
             ]);
 

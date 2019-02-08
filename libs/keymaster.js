@@ -1,20 +1,20 @@
-//     keymaster.js
+//     Keymaster.js
 //     (c) 2011-2013 Thomas Fuchs
-//     keymaster.js may be freely distributed under the MIT license.
+//     Keymaster.js may be freely distributed under the MIT license.
 
 ;(function(global){
   var k,
     _handlers = {},
-    _mods = { 16: false, 18: false, 17: false, 91: false },
+    _mods = {16: false, 18: false, 17: false, 91: false},
     _scope = 'all',
-    // modifier keys
+    // Modifier keys
     _MODIFIERS = {
       '⇧': 16, shift: 16,
       '⌥': 18, alt: 18, option: 18,
       '⌃': 17, ctrl: 17, control: 17,
       '⌘': 91, command: 91
     },
-    // special keys
+    // Special keys
     _MAP = {
       backspace: 8, tab: 9, clear: 12,
       enter: 13, 'return': 13,
@@ -43,7 +43,7 @@
     return -1;
   }
 
-  // for comparing mods before unassignment
+  // For comparing mods before unassignment
   function compareArray(a1, a2) {
     if (a1.length != a2.length) return false;
     for (var i = 0; i < a1.length; i++) {
@@ -62,7 +62,7 @@
       for(k in _mods) _mods[k] = event[modifierMap[k]];
   };
 
-  // handle keydown event
+  // Handle keydown event
   function dispatch(event) {
     var key, handler, k, i, modifiersMatch, scope;
     key = event.keyCode;
@@ -71,8 +71,8 @@
         _downKeys.push(key);
     }
 
-    // if a modifier key, set the key.<modifierkeyname> property to true and return
-    if(key == 93 || key == 224) key = 91; // right command on webkit, command on Gecko
+    // If a modifier key, set the key.<modifierkeyname> property to true and return
+    if(key == 93 || key == 224) key = 91; // Right command on webkit, command on Gecko
     if(key in _mods) {
       _mods[key] = true;
       // 'assignKey' from inside this closure is exported to window.key
@@ -81,27 +81,27 @@
     }
     updateModifierKey(event);
 
-    // see if we need to ignore the keypress (filter() can can be overridden)
-    // by default ignore key presses if a select, textarea, or input is focused
+    // See if we need to ignore the keypress (filter() can can be overridden)
+    // By default ignore key presses if a select, textarea, or input is focused
     if(!assignKey.filter.call(this, event)) return;
 
-    // abort if no potentially matching shortcuts found
+    // Abort if no potentially matching shortcuts found
     if (!(key in _handlers)) return;
 
     scope = getScope();
 
-    // for each potential shortcut
+    // For each potential shortcut
     for (i = 0; i < _handlers[key].length; i++) {
       handler = _handlers[key][i];
 
-      // see if it's in the current scope
+      // See if it's in the current scope
       if(handler.scope == scope || handler.scope == 'all'){
-        // check if modifiers match if any
+        // Check if modifiers match if any
         modifiersMatch = handler.mods.length > 0;
         for(k in _mods)
           if((!_mods[k] && index(handler.mods, +k) > -1) ||
             (_mods[k] && index(handler.mods, +k) == -1)) modifiersMatch = false;
-        // call the handler and stop the event if neccessary
+        // Call the handler and stop the event if neccessary
         if((handler.mods.length == 0 && !_mods[16] && !_mods[18] && !_mods[17] && !_mods[91]) || modifiersMatch){
           if(handler.method(event, handler)===false){
             if(event.preventDefault) event.preventDefault();
@@ -114,12 +114,12 @@
     }
   };
 
-  // unset modifier keys on keyup
+  // Unset modifier keys on keyup
   function clearModifier(event){
     var key = event.keyCode, k,
         i = index(_downKeys, key);
 
-    // remove key from _downKeys
+    // Remove key from _downKeys
     if (i >= 0) {
         _downKeys.splice(i, 1);
     }
@@ -136,7 +136,7 @@
     for(k in _MODIFIERS) assignKey[k] = false;
   };
 
-  // parse and assign shortcut
+  // Parse and assign shortcut
   function assignKey(key, scope, method){
     var keys, mods;
     keys = getKeys(key);
@@ -145,25 +145,25 @@
       scope = 'all';
     }
 
-    // for each shortcut
+    // For each shortcut
     for (var i = 0; i < keys.length; i++) {
-      // set modifier keys if any
+      // Set modifier keys if any
       mods = [];
       key = keys[i].split('+');
       if (key.length > 1){
         mods = getMods(key);
         key = [key[key.length-1]];
       }
-      // convert to keycode and...
+      // Convert to keycode and...
       key = key[0]
       key = code(key);
       // ...store handler
       if (!(key in _handlers)) _handlers[key] = [];
-      _handlers[key].push({ shortcut: keys[i], scope: scope, method: method, key: keys[i], mods: mods });
+      _handlers[key].push({shortcut: keys[i], scope: scope, method: method, key: keys[i], mods: mods});
     }
   };
 
-  // unbind all handlers for given key in current scope
+  // Unbind all handlers for given key in current scope
   function unbindKey(key, scope) {
     var multipleKeys, keys,
       mods = [],
@@ -189,7 +189,7 @@
       }
       for (i = 0; i < _handlers[key].length; i++) {
         obj = _handlers[key][i];
-        // only clear handlers if correct scope and mods match
+        // Only clear handlers if correct scope and mods match
         if (obj.scope === scope && compareArray(obj.mods, mods)) {
           _handlers[key][i] = {};
         }
@@ -200,7 +200,7 @@
   // Returns true if the key with code 'keyCode' is currently down
   // Converts strings into key codes.
   function isPressed(keyCode) {
-      if (typeof(keyCode)=='string') {
+      if (typeof(keyCode)==='string') {
         keyCode = code(keyCode);
       }
       return index(_downKeys, keyCode) != -1;
@@ -212,18 +212,18 @@
 
   function filter(event){
     var tagName = (event.target || event.srcElement).tagName;
-    // ignore keypressed in any elements that support keyboard data input
+    // Ignore keypressed in any elements that support keyboard data input
     return !(tagName == 'INPUT' || tagName == 'SELECT' || tagName == 'TEXTAREA');
   }
 
-  // initialize key.<modifier> to false
+  // Initialize key.<modifier> to false
   for(k in _MODIFIERS) assignKey[k] = false;
 
-  // set current scope (default 'all')
+  // Set current scope (default 'all')
   function setScope(scope){ _scope = scope || 'all' };
   function getScope(){ return _scope || 'all' };
 
-  // delete all handlers for a given scope
+  // Delete all handlers for a given scope
   function deleteScope(scope){
     var key, handlers, i;
 
@@ -236,7 +236,7 @@
     }
   };
 
-  // abstract key logic for assign and unassign
+  // Abstract key logic for assign and unassign
   function getKeys(key) {
     var keys;
     key = key.replace(/\s/g, '');
@@ -247,7 +247,7 @@
     return keys;
   }
 
-  // abstract mods logic for assign and unassign
+  // Abstract mods logic for assign and unassign
   function getMods(key) {
     var mods = key.slice(0, key.length - 1);
     for (var mi = 0; mi < mods.length; mi++)
@@ -255,7 +255,7 @@
     return mods;
   }
 
-  // cross-browser events
+  // Cross-browser events
   function addEvent(object, event, method) {
     if (object.addEventListener)
       object.addEventListener(event, method, false);
@@ -263,24 +263,24 @@
       object.attachEvent('on'+event, function(){ method(window.event) });
   };
 
-  // set the handlers globally on document
+  // Set the handlers globally on document
   addEvent(document, 'keydown', function(event) { dispatch(event) }); // Passing _scope to a callback to ensure it remains the same by execution. Fixes #48
   addEvent(document, 'keyup', clearModifier);
 
-  // reset modifiers to false whenever the window is (re)focused.
+  // Reset modifiers to false whenever the window is (re)focused.
   addEvent(window, 'focus', resetModifiers);
 
-  // store previously defined key
+  // Store previously defined key
   var previousKey = global.key;
 
-  // restore previously defined key and return reference to our key object
+  // Restore previously defined key and return reference to our key object
   function noConflict() {
     var k = global.key;
     global.key = previousKey;
     return k;
   }
 
-  // set window.key and window.key.set/get/deleteScope, and the default filter
+  // Set window.key and window.key.set/get/deleteScope, and the default filter
   global.key = assignKey;
   global.key.setScope = setScope;
   global.key.getScope = getScope;

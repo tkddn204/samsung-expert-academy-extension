@@ -7,11 +7,10 @@ $(document).ready(() => {
 
         /**
          * Problem List Page
-         *
-         * 모바일 버전에 대응하기 위해 검색 부분 수정
          */
         const $searchBar = $('.row.list-navbar-form');
         if ($searchBar) {
+            // 검색 부분 수정
             $searchBar.css('justify-content', 'flex-end');
             $searchBar.find('.col-lg-2').remove();
             $searchBar.find('.col-lg-3').css('flex', '0');
@@ -28,29 +27,42 @@ $(document).ready(() => {
 
         /**
          * Problem Page
-         *
-         * 모바일 버전에 대응하기 위해 "문제 풀기" 버튼 조정
          */
         const $container = $('.container.sub');
         if ($container) {
             $container.css('width', '100%');
             const $btnRight = $('.btn_right');
 
+            // "문제 풀기" 버튼
             $('#orderBy').css('width', 'auto');
             $btnRight.find('#mobileSolveBtn').remove();
             $btnRight.find('.hidden_solve_btn')
                 .removeClass('hidden_solve_btn');
+
+            // 문제 정보
+            const $infoBox = $('.problem_infobox2');
+            $infoBox.css({
+                width: '100%',
+                padding: '15px'
+            });
+            $infoBox.find('.master').css({
+                width: '100px',
+                minWidth: '0px'
+            });
+            $infoBox.find('.info').css('float', 'none');
+
+            // 입출력 박스
+            $('.box_type1').children().css('width', 'calc(50% - 15px)');
         }
 
 
         /**
          * Problem Solving page
-         *
-         * 왼쪽 "제출 결과"를 고정 상태에서 메뉴로써 사용할 수 있도록 변경
          */
         const $left = $('.problem_left');
         const $right = $('.problem_right');
         if ($left && $right) {
+            // 왼쪽 "제출 결과"를 고정 상태에서 메뉴로써 사용할 수 있도록 변경
             $left.css('visibility', 'hidden');
             $right.css({
                 'left': '0px',
@@ -59,6 +71,7 @@ $(document).ready(() => {
                 'padding': '10px'
             });
 
+            // 헤더 부분에 버튼 추가
             const $button = $('<div href="#" class="samsungext-toggle">▶</div>');
             const $header = $('.header');
             $header.css({
@@ -75,6 +88,8 @@ $(document).ready(() => {
                 'height': '50px',
                 'margin-left': '10px'
             });
+
+            // 버튼 추가로 인한 css 수정
             $header.find('h1').css('flex', 'auto');
             $('.club_name').css({
                 'position': 'static',
@@ -106,4 +121,5 @@ $(document).ready(() => {
             });
         }
     }
+
 });
