@@ -119,59 +119,88 @@ $(document).ready(() => {
                 }
                 return false;
             });
+        }
 
+        /**
+         * Input/Output Copy function
+         */
+        const $inOutBox = $('.box_type1');
+        if ($inOutBox) {
             // 입출력 복사하는 부분 추가
-            const $inOutBox = $('.box_type1');
             const $copyDescription = $('<span class="copy-description"><b>★ 코드를 누르면 코드가 복사됩니다 ★</b></span>');
             $copyDescription.insertBefore($inOutBox);
 
             const $inputBox = $inOutBox.find('.left');
+            const $outputBox = $inOutBox.find('.right');
 
+            // 클래스 copy-code-input/output 설정
             const $inputTable = $inputBox.find('table');
             if ($inputTable.length !== 0) {
-                const $inputTableOfTd = $inputTable.find('td');
-                $inputTableOfTd.addClass('input-code');
                 $inputTable.addClass('copy-code-input');
                 $inputTable.attr('data-clipboard-target', '.input-code');
             } else {
-                const $inputSpan = $inputBox.find('.box5').children().eq(1);
-                $inputSpan.addClass('input-code');
+                const $inputSpan = $inputBox.find('.box5');
                 $inputSpan.addClass('copy-code-input');
                 $inputSpan.attr('data-clipboard-target', '.input-code');
             }
 
-            const $outputBox = $inOutBox.find('.right');
-
             const $outputTable = $outputBox.find('table');
             if ($outputTable.length !== 0) {
-                const $outputTableOfTd = $outputTable.find('td');
-                $outputTableOfTd.addClass('output-code');
                 $outputTable.addClass('copy-code-output');
                 $outputTable.attr('data-clipboard-target', '.output-code');
             } else {
-                const $outputSpan = $outputBox.find('.box5').children().eq(1);
-                $outputSpan.addClass('output-code');
+                const $outputSpan = $outputBox.find('.box5');
                 $outputSpan.addClass('copy-code-output');
                 $outputSpan.attr('data-clipboard-target', '.output-code');
             }
 
-            const inputClipboard = new ClipboardJS('.copy-code-input');
-            const outputClipboard = new ClipboardJS('.copy-code-output');
 
-            inputClipboard.on('success', (e) => {
-                $('.copy-description').html('<b>입력 복사 완료!!</b>');
-                console.info('Action:', e.action);
-                console.info('Text:', e.text);
-                console.info('Trigger:', e.trigger);
-                e.clearSelection();
+            $.ajax({
+                url: $inputBox.find('.down_area').find('a[href*="?"]').attr('href'),
+                success: (data) => {
+                    $(`<span class="input-code" hidden>${data}</span>`)
+                        .insertBefore($inOutBox);
+                    setClipboard('.copy-code-input', '입력 복사 완료!!', true);
+                }
             });
-            outputClipboard.on('success', (e) => {
-                $('.copy-description').html('<b>출력 복사 완료!!</b>');
-                console.info('Action:', e.action);
-                console.info('Text:', e.text);
-                console.info('Trigger:', e.trigger);
-                e.clearSelection();
+            $.ajax({
+                url: $outputBox.find('.down_area').find('a[href*="?"]').attr('href'),
+                success: (data) => {
+                    $(`<span class="output-code" hidden>${data}</span>`)
+                        .insertBefore($inOutBox);
+                    setClipboard('.copy-code-output', '출력 복사 완료!!', true);
+                }
             });
         }
+    }
+
+    /**
+     * 클립보드 객체를 생성하고, 복사에 성공하면 class 속성이 copy-description인
+     * html 엘리먼트의 내용을 바꿈.
+     * @param what 복사할 css 선택자 이름
+     * @param text copy-description class를 가지고 있는 엘리먼트의 텍스트
+     * @param isHidden what의 속성 중 hidden이 있으면 true
+     */
+    const setClipboard = (what, text, isHidden=false) => {
+        let inputClipboard;
+        if (!isHidden) {
+            inputClipboard = new ClipboardJS(what);
+        } else {
+            inputClipboard = new ClipboardJS(what,
+                {
+                    text: () => $(what === '.copy-code-input' ?
+                        '.input-code' : '.output-code').text()
+                });
+        }
+
+        inputClipboard.on('success', (e) => {
+            $('.copy-description').html(`<b>${text}</b>`);
+            /* .
+            console.info('Action:', e.action);
+            console.info('Text:', e.text);
+            console.info('Trigger:', e.trigger);
+            */
+            e.clearSelection();
+        });
     }
 });

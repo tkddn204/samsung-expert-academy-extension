@@ -1,3 +1,6 @@
+## ver.0.1.6
+- 복사 기능 - ajax로 파일을 다운받아 엘리먼트를 추가하는걸로 변경
+
 ## ver.0.1.5
 - fix copy input/output function error(not table error)
 
