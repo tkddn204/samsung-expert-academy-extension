@@ -9,7 +9,7 @@ $(document).ready(() => {
          * Problem List Page
          */
         const $searchBar = $('.row.list-navbar-form');
-        if ($searchBar) {
+        if ($searchBar.length) {
             // 검색 부분 수정
             $searchBar.css('justify-content', 'flex-end');
             $searchBar.find('.col-lg-2').remove();
@@ -31,8 +31,10 @@ $(document).ready(() => {
         const $container = $('.container.sub');
         if ($container) {
             $container.css('width', '100%');
-            const $btnRight = $('.btn_right');
+        }
 
+        const $btnRight = $('.btn_right');
+        if ($btnRight.length) {
             // "문제 풀기" 버튼
             $('#orderBy').css('width', 'auto');
             $btnRight.find('#mobileSolveBtn').remove();
@@ -53,15 +55,68 @@ $(document).ready(() => {
 
             // 입출력 박스
             $('.box_type1').children().css('width', 'calc(50% - 15px)');
+
+            // 네비게이션 있는 헤더 조정
+            $('.gnb_top').find('.row').css('width', '100%');
+            const $headerContainer = $('.gnb-common-inner');
+            $headerContainer.css({
+                display: 'flex',
+                width: '100%'
+            });
+
+            // 헤더 맨왼쪽
+            const $headerBrand = $headerContainer.find('.navbar-brand');
+            $headerBrand.css({
+                margin: '10px -30px 0px 0px',
+                paddingLeft: '5px'
+            });
+
+            // 헤더 중간 메뉴
+            const $headerMenu = $headerContainer.find('.navbar-collapse');
+            $headerMenu.css({
+                maxWidth: '380px',
+                marginLeft: '0px'
+            });
+            $headerMenu.find('.navbar-nav').children().css({
+                marginRight: '-30px'
+            });
+
+            // 헤더 오른쪽부분
+            const $headerRight = $headerContainer.find('.navbar-right');
+            $headerRight.css({
+                display: 'flex',
+                flexGrow: '1',
+                justifyContent: 'flex-end'
+            });
+            const $myLogin = $headerRight.find('.my-login');
+            $myLogin.css({
+                display: 'flex',
+                marginRight: '5px'
+            });
+            $myLogin.find('.name').css('margin', '6px');
+            showSearchIcon();
+            $(window).on('resize', showSearchIcon);
+
+            // Problem 메뉴 크기 조정
+            const $subHeader = $('.sub_header');
+            $subHeader.css('width', '100%');
+            $subHeader.find('.code-menu').css('width', '100%');
+
+            // 맨 밑 도움이 되는 문제 크기 조정
+            const $helpProblems = $('.tabcon_wrap').find('.state_wrap');
+            if ($helpProblems.length) {
+                $helpProblems.css('justify-content', 'center');
+                $helpProblems.children().css('padding', '5px');
+            }
         }
 
 
-        /**
+       /**
          * Problem Solving page
          */
         const $left = $('.problem_left');
         const $right = $('.problem_right');
-        if ($left && $right) {
+        if ($left.length && $right.length) {
             // 왼쪽 "제출 결과"를 고정 상태에서 메뉴로써 사용할 수 있도록 변경
             $left.css('visibility', 'hidden');
             $right.css({
@@ -125,7 +180,7 @@ $(document).ready(() => {
          * Input/Output Copy function
          */
         const $inOutBox = $('.box_type1');
-        if ($inOutBox) {
+        if ($inOutBox.length) {
             // 입출력 복사하는 부분 추가
             const $copyDescription = $('<span class="copy-description"><b>★ 코드를 누르면 코드가 복사됩니다 ★</b></span>');
             $copyDescription.insertBefore($inOutBox);
@@ -173,6 +228,14 @@ $(document).ready(() => {
             });
         }
     }
+
+    const showSearchIcon = () => {
+        if ($(window).width() < 990) {
+            $('.navbar-right').find('.input-icon').hide();
+        } else {
+            $('.navbar-right').find('.input-icon').show();
+        }
+    };
 
     /**
      * 클립보드 객체를 생성하고, 복사에 성공하면 class 속성이 copy-description인
