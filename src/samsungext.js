@@ -179,15 +179,18 @@ $(document).ready(() => {
         /**
          * Input/Output Copy function
          */
-        const $inOutBox = $('.box_type1');
+        const $inOutBox = $('.box_type1').not('.mt-12');
+
         if ($inOutBox.length) {
             // 입출력 복사하는 부분 추가
             const $copyDescription = $('<span class="copy-description"><b>★ 코드를 누르면 코드가 복사됩니다 ★</b></span>');
             $copyDescription.insertBefore($inOutBox);
 
-            const $inputBox = $inOutBox.find('.left');
-            const $outputBox = $inOutBox.find('.right');
+            const $inputBox = $inOutBox.children().first();
+            const $outputBox = $inOutBox.children().eq(1);
 
+            console.log($inputBox);
+            console.log($outputBox);
             // 클래스 copy-code-input/output 설정
             const $inputTable = $inputBox.find('table');
             if ($inputTable.length !== 0) {
@@ -209,23 +212,37 @@ $(document).ready(() => {
                 $outputSpan.attr('data-clipboard-target', '.output-code');
             }
 
+            // 레퍼런스 코드일 경우
+            if ($('.reference_box').length) {
+                const $inoutBoxes = $inOutBox.find('.box5').find('p');
+                const inputText = $inoutBoxes.first().text().replace(/\/[^\n]+/g, '');
+                const outputText = $inoutBoxes.eq(1).text().replace(/\/[^\n]+/g, '');
 
-            $.ajax({
-                url: $inputBox.find('.down_area').find('a[href*="?"]').attr('href'),
-                success: (data) => {
-                    $(`<span class="input-code" hidden>${data}</span>`)
-                        .insertBefore($inOutBox);
-                    setClipboard('.copy-code-input', '입력 복사 완료!!', true);
-                }
-            });
-            $.ajax({
-                url: $outputBox.find('.down_area').find('a[href*="?"]').attr('href'),
-                success: (data) => {
-                    $(`<span class="output-code" hidden>${data}</span>`)
-                        .insertBefore($inOutBox);
-                    setClipboard('.copy-code-output', '출력 복사 완료!!', true);
-                }
-            });
+                $(`<span class="input-code" hidden>${inputText}</span>`)
+                    .insertBefore($inOutBox);
+                setClipboard('.copy-code-input', '입력 복사 완료!!', true);
+
+                $(`<span class="output-code" hidden>${outputText}</span>`)
+                    .insertBefore($inOutBox);
+                setClipboard('.copy-code-output', '출력 복사 완료!!', true);
+            } else {
+                $.ajax({
+                    url: $inputBox.find('.down_area').find('a[href*="?"]').attr('href'),
+                    success: (data) => {
+                        $(`<span class="input-code" hidden>${data}</span>`)
+                            .insertBefore($inOutBox);
+                        setClipboard('.copy-code-input', '입력 복사 완료!!', true);
+                    }
+                });
+                $.ajax({
+                    url: $outputBox.find('.down_area').find('a[href*="?"]').attr('href'),
+                    success: (data) => {
+                        $(`<span class="output-code" hidden>${data}</span>`)
+                            .insertBefore($inOutBox);
+                        setClipboard('.copy-code-output', '출력 복사 완료!!', true);
+                    }
+                });
+            }
         }
     }
 
