@@ -189,28 +189,25 @@ $(document).ready(() => {
             const $inputBox = $inOutBox.children().first();
             const $outputBox = $inOutBox.children().eq(1);
 
-            console.log($inputBox);
-            console.log($outputBox);
-            // 클래스 copy-code-input/output 설정
-            const $inputTable = $inputBox.find('table');
-            if ($inputTable.length !== 0) {
-                $inputTable.addClass('copy-code-input');
-                $inputTable.attr('data-clipboard-target', '.input-code');
-            } else {
-                const $inputSpan = $inputBox.find('.box5');
-                $inputSpan.addClass('copy-code-input');
-                $inputSpan.attr('data-clipboard-target', '.input-code');
-            }
+            // 입력 복사 버튼 추가
+            const $inputCopyButton = $('<button>입력 코드 복사</button>');
+            $inputCopyButton.appendTo($inputBox.find('.title1'));
+            $inputCopyButton.addClass('copy-code-input');
+            $inputCopyButton.attr({
+                'data-clipboard-target': '.input-code',
+                type: 'button'
+            });
+            $inputCopyButton.css('float', 'right');
 
-            const $outputTable = $outputBox.find('table');
-            if ($outputTable.length !== 0) {
-                $outputTable.addClass('copy-code-output');
-                $outputTable.attr('data-clipboard-target', '.output-code');
-            } else {
-                const $outputSpan = $outputBox.find('.box5');
-                $outputSpan.addClass('copy-code-output');
-                $outputSpan.attr('data-clipboard-target', '.output-code');
-            }
+            // 출력 복사 버튼 추가
+            const $outputCopyButton = $('<button>출력 코드 복사</button>');
+            $outputCopyButton.appendTo($outputBox.find('.title1'));
+            $outputCopyButton.addClass('copy-code-output');
+            $outputCopyButton.attr({
+                'data-clipboard-target': '.output-code',
+                type: 'button'
+            });
+            $outputCopyButton.css('float', 'right');
 
             // 레퍼런스 코드일 경우
             if ($('.reference_box').length) {
