@@ -55,28 +55,12 @@ gulp.task('styles', () => {
   );
 });
 
-gulp.task('lib:ondemand', (cb) => {
-  const dir = './libs/ondemand';
-  const code = fs
-    .readdirSync(dir)
-    .map((file) => {
-      return `window['${file}'] = function () {
-      ${fs.readFileSync(path.join(dir, file))}
-    };\n`;
-    })
-    .join('');
-
-  fs.writeFileSync('./tmp/ondemand.js', code);
-
-  cb();
-});
-
 // Chrome
 gulp.task('chrome:template', () => {
   return buildTemplate({SUPPORT_FILE_ICONS: true, SUPPORT_GHE: true});
 });
 
-gulp.task('chrome:js', ['chrome:template', 'lib:ondemand'], () => {
+gulp.task('chrome:js', ['chrome:template'], () => {
   return buildJs(['./src/config/chrome/overrides.js'], {SUPPORT_FILE_ICONS: true, SUPPORT_GHE: true});
 });
 
@@ -91,17 +75,9 @@ gulp.task('chrome', ['chrome:js'], () => {
     pipe(
       [
         './libs/**/*',
-        '!./libs/jstree.css',
-        '!./libs/ondemand{,/**}',
         './tmp/samsungext.*',
         './tmp/ondemand.js'
       ],
-      dest
-    ),
-    pipe(
-      './libs/jstree.css',
-      $.replace('url("32px.png")', `url("${extRoot}/images/32px.png")`),
-      $.replace('url("40px.png")', `url("${extRoot}/images/40px.png")`),
       dest
     ),
     pipe(

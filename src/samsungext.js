@@ -5,6 +5,12 @@ $(document).ready(() => {
 
     async function loadExtension() {
 
+        // 컨테이너 창을 100%로 유지
+        const $container = $('.container.sub');
+        if ($container) {
+            $container.css('width', '100%');
+        }
+
         /**
          * Problem List Page
          */
@@ -12,7 +18,6 @@ $(document).ready(() => {
         if ($searchBar.length) {
             // 검색 부분 수정
             $searchBar.css('justify-content', 'flex-end');
-            $searchBar.find('.col-lg-2').remove();
             $searchBar.find('.col-lg-3').css('flex', '0');
             $searchBar.find('.col-lg-7').css({
                 flex: '0',
@@ -28,11 +33,6 @@ $(document).ready(() => {
         /**
          * Problem Page
          */
-        const $container = $('.container.sub');
-        if ($container) {
-            $container.css('width', '100%');
-        }
-
         const $btnRight = $('.btn_right');
         if ($btnRight.length) {
             // "문제 풀기" 버튼
@@ -151,6 +151,7 @@ $(document).ready(() => {
                 'margin': '10px 10px 0px'
             });
 
+            // 버튼 클릭 이벤트
             $button.on('click', (e) => {
                 e.stopPropagation();
                 const $left = $('.problem_left');
@@ -183,7 +184,7 @@ $(document).ready(() => {
 
         if ($inOutBox.length) {
             // 입출력 복사하는 부분 추가
-            const $copyDescription = $('<span class="copy-description"><b>★ 코드를 누르면 코드가 복사됩니다 ★</b></span>');
+            const $copyDescription = $('<span class="copy-description"></span>');
             $copyDescription.insertBefore($inOutBox);
 
             const $inputBox = $inOutBox.children().first();
@@ -209,8 +210,9 @@ $(document).ready(() => {
             });
             $outputCopyButton.css('float', 'right');
 
-            // 레퍼런스 코드일 경우
+            // TODO: 복사가 실패할 경우 추가
             if ($('.reference_box').length) {
+                // 레퍼런스 코드일 경우
                 const $inoutBoxes = $inOutBox.find('.box5').find('p');
                 const inputText = $inoutBoxes.first().text().replace(/\/[^\n]+/g, '');
                 const outputText = $inoutBoxes.eq(1).text().replace(/\/[^\n]+/g, '');
@@ -223,6 +225,8 @@ $(document).ready(() => {
                     .insertBefore($inOutBox);
                 setClipboard('.copy-code-output', '출력 복사 완료!!', true);
             } else {
+                // 일반적인 경우 ajax로 파일(input/output.txt)을 다운받아,
+                // 따로 span을 생성하여 임시 저장해 둠.
                 $.ajax({
                     url: $inputBox.find('.down_area').find('a[href*="?"]').attr('href'),
                     success: (data) => {
@@ -243,6 +247,9 @@ $(document).ready(() => {
         }
     }
 
+    /**
+     * 검색 아이콘을 화면 크기에 따라 숨기고 표시하는 jquery 함수
+     */
     const showSearchIcon = () => {
         if ($(window).width() < 990) {
             $('.navbar-right').find('.input-icon').hide();
