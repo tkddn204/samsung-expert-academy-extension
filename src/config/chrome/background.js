@@ -22,7 +22,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                 'jquery-ui.js',
                 'clipboard.min.js',
                 'keymaster.js',
-                'ondemand.js',
                 'samsungext.js'
             ];
 
@@ -65,7 +64,7 @@ chrome.runtime.onMessage.addListener((req, sender, sendRes) => {
             return true;
 
             function removeUnnecessaryPermissions() {
-                const whitelist = urls.concat(['https://www.swexpertacademy.com/main/*']);
+                const whitelist = urls.concat(['https://www.swexpertacademy.com/*']);
                 chrome.permissions.getAll((permissions) => {
                     const toBeRemovedUrls = permissions.origins.filter((url) => {
                         return !~whitelist.indexOf(url);

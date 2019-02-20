@@ -1,7 +1,8 @@
-function updateSolveBtn() {
+function updateSolvePage() {
     /**
      * Problem Page
      */
+    // 컨테이너 창을 100%로 유지
     const $container = $('.container.sub');
     if ($container) {
         $container.css('width', '100%');
@@ -70,14 +71,6 @@ function updateSolveBtn() {
         $myLogin.find('.name').css('margin', '6px');
         showSearchIcon();
         $(window).on('resize', showSearchIcon);
-
-        const showSearchIcon = () => {
-            if ($(window).width() < 990) {
-                $('.navbar-right').find('.input-icon').hide();
-            } else {
-                $('.navbar-right').find('.input-icon').show();
-            }
-        };
 
         // Problem 메뉴 크기 조정
         const $subHeader = $('.sub_header');

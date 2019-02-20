@@ -1,4 +1,7 @@
 function updateInputOutputBox() {
+    /**
+     * Problem Solving page
+     */
     const $left = $('.problem_left');
     const $right = $('.problem_right');
     if ($left.length && $right.length) {
@@ -36,6 +39,7 @@ function updateInputOutputBox() {
             'margin': '10px 10px 0px'
         });
 
+        // 버튼 클릭 이벤트
         $button.on('click', (e) => {
             e.stopPropagation();
             const $left = $('.problem_left');

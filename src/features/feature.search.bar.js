@@ -6,7 +6,6 @@ function updateSearchBar() {
     if ($searchBar.length) {
         // 검색 부분 수정
         $searchBar.css('justify-content', 'flex-end');
-        $searchBar.find('.col-lg-2').remove();
         $searchBar.find('.col-lg-3').css('flex', '0');
         $searchBar.find('.col-lg-7').css({
             flex: '0',

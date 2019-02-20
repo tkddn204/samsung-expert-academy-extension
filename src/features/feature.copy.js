@@ -6,7 +6,7 @@ function addCopyFunc() {
 
     if ($inOutBox.length) {
         // 입출력 복사하는 부분 추가
-        const $copyDescription = $('<span class="copy-description"><b>★ 코드를 누르면 코드가 복사됩니다 ★</b></span>');
+        const $copyDescription = $('<span class="copy-description"></span>');
         $copyDescription.insertBefore($inOutBox);
 
         const $inputBox = $inOutBox.children().first();
@@ -32,8 +32,9 @@ function addCopyFunc() {
         });
         $outputCopyButton.css('float', 'right');
 
-        // 레퍼런스 코드일 경우
+        // TODO: 복사가 실패할 경우 추가
         if ($('.reference_box').length) {
+            // 레퍼런스 코드일 경우
             const $inoutBoxes = $inOutBox.find('.box5').find('p');
             const inputText = $inoutBoxes.first().text().replace(/\/[^\n]+/g, '');
             const outputText = $inoutBoxes.eq(1).text().replace(/\/[^\n]+/g, '');
@@ -46,6 +47,8 @@ function addCopyFunc() {
                 .insertBefore($inOutBox);
             setClipboard('.copy-code-output', '출력 복사 완료!!', true);
         } else {
+            // 일반적인 경우 ajax로 파일(input/output.txt)을 다운받아,
+            // 따로 span을 생성하여 임시 저장해 둠.
             $.ajax({
                 url: $inputBox.find('.down_area').find('a[href*="?"]').attr('href'),
                 success: (data) => {
@@ -64,6 +67,7 @@ function addCopyFunc() {
             });
         }
     }
+
     /**
      * 클립보드 객체를 생성하고, 복사에 성공하면 class 속성이 copy-description인
      * html 엘리먼트의 내용을 바꿈.

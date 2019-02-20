@@ -5,7 +5,7 @@ $(document).ready(() => {
 
     async function loadExtension() {
         updateSearchBar();
-        updateSolveBtn();
+        updateSolvePage();
         updateInputOutputBox();
     }
 });
