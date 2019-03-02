@@ -85,3 +85,13 @@ function updateSolvePage() {
         }
     }
 }
+/**
+ * 검색 아이콘을 화면 크기에 따라 숨기고 표시하는 jquery 함수
+ */
+const showSearchIcon = () => {
+    if ($(window).width() < 990) {
+        $('.navbar-right').find('.input-icon').hide();
+    } else {
+        $('.navbar-right').find('.input-icon').show();
+    }
+};

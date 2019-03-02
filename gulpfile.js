@@ -165,15 +165,15 @@ function html2js(template) {
 }
 
 function buildJs(overrides, ctx) {
+    const features = fs.readdirSync('./src/features').map((name) => './src/features/' + name);
     const src = [
             './tmp/template.js',
             './src/util.async.js',
             './src/core.constants.js',
             './src/core.storage.js',
-            './src/core.plugins.js'
         ]
         .concat(overrides)
-        .concat(fs.readdirSync('./src/features').map((name) => './src/features/' + name))
+        .concat(features)
         .concat('./src/samsungext.js');
     return pipe(
         src,
