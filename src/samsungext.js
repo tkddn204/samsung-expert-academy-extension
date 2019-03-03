@@ -5,6 +5,8 @@ $(document).ready(() => {
 
     function loadExtension() {
         enableContextMenu();
+        updateHeader();
+        updateMyPage();
         updateSearchBar();
         updateSolvePage();
         updateInputOutputBox();

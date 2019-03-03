@@ -1,3 +1,33 @@
+
+/**
+ * 클립보드 객체를 생성하고, 복사에 성공하면 class 속성이 copy-description인
+ * html 엘리먼트의 내용을 바꿈.
+ * @param what 복사할 css 선택자 이름
+ * @param text copy-description class를 가지고 있는 엘리먼트의 텍스트
+ * @param isHidden what의 속성 중 hidden이 있으면 true
+ */
+const setClipboard = (what, text, isHidden = false) => {
+    let inputClipboard;
+    if (!isHidden) {
+        inputClipboard = new ClipboardJS(what);
+    } else {
+        inputClipboard = new ClipboardJS(what, {
+            text: () => $(what === '.copy-code-input' ?
+                '.input-code' : '.output-code').text()
+        });
+    }
+
+    inputClipboard.on('success', (e) => {
+        $('.copy-description').html(`<b>${text}</b>`);
+        /* .
+        console.info('Action:', e.action);
+        console.info('Text:', e.text);
+        console.info('Trigger:', e.trigger);
+        */
+        e.clearSelection();
+    });
+};
+
 function addCopyFunc() {
     /**
      * Input/Output Copy function
@@ -66,34 +96,5 @@ function addCopyFunc() {
                 }
             });
         }
-    }
-
-    /**
-     * 클립보드 객체를 생성하고, 복사에 성공하면 class 속성이 copy-description인
-     * html 엘리먼트의 내용을 바꿈.
-     * @param what 복사할 css 선택자 이름
-     * @param text copy-description class를 가지고 있는 엘리먼트의 텍스트
-     * @param isHidden what의 속성 중 hidden이 있으면 true
-     */
-    const setClipboard = (what, text, isHidden = false) => {
-        let inputClipboard;
-        if (!isHidden) {
-            inputClipboard = new ClipboardJS(what);
-        } else {
-            inputClipboard = new ClipboardJS(what, {
-                text: () => $(what === '.copy-code-input' ?
-                    '.input-code' : '.output-code').text()
-            });
-        }
-
-        inputClipboard.on('success', (e) => {
-            $('.copy-description').html(`<b>${text}</b>`);
-            /* .
-            console.info('Action:', e.action);
-            console.info('Text:', e.text);
-            console.info('Trigger:', e.trigger);
-            */
-            e.clearSelection();
-        });
     }
 }

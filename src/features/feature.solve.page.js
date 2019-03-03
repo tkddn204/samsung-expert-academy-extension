@@ -31,52 +31,6 @@ function updateSolvePage() {
         // 입출력 박스
         $('.box_type1').children().css('width', 'calc(50% - 15px)');
 
-        // 네비게이션 있는 헤더 조정
-        $('.gnb_top').find('.row').css('width', '100%');
-        const $headerContainer = $('.gnb-common-inner');
-        $headerContainer.css({
-            display: 'flex',
-            width: '100%'
-        });
-
-        // 헤더 맨왼쪽
-        const $headerBrand = $headerContainer.find('.navbar-brand');
-        $headerBrand.css({
-            margin: '10px -30px 0px 0px',
-            paddingLeft: '5px'
-        });
-
-        // 헤더 중간 메뉴
-        const $headerMenu = $headerContainer.find('.navbar-collapse');
-        $headerMenu.css({
-            maxWidth: '380px',
-            marginLeft: '0px'
-        });
-        $headerMenu.find('.navbar-nav').children().css({
-            marginRight: '-30px'
-        });
-
-        // 헤더 오른쪽부분
-        const $headerRight = $headerContainer.find('.navbar-right');
-        $headerRight.css({
-            display: 'flex',
-            flexGrow: '1',
-            justifyContent: 'flex-end'
-        });
-        const $myLogin = $headerRight.find('.my-login');
-        $myLogin.css({
-            display: 'flex',
-            marginRight: '5px'
-        });
-        $myLogin.find('.name').css('margin', '6px');
-        showSearchIcon();
-        $(window).on('resize', showSearchIcon);
-
-        // Problem 메뉴 크기 조정
-        const $subHeader = $('.sub_header');
-        $subHeader.css('width', '100%');
-        $subHeader.find('.code-menu').css('width', '100%');
-
         // 맨 밑 도움이 되는 문제 크기 조정
         const $helpProblems = $('.tabcon_wrap').find('.state_wrap');
         if ($helpProblems.length) {
@@ -85,13 +39,3 @@ function updateSolvePage() {
         }
     }
 }
-/**
- * 검색 아이콘을 화면 크기에 따라 숨기고 표시하는 jquery 함수
- */
-const showSearchIcon = () => {
-    if ($(window).width() < 990) {
-        $('.navbar-right').find('.input-icon').hide();
-    } else {
-        $('.navbar-right').find('.input-icon').show();
-    }
-};
