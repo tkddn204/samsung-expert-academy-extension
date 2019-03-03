@@ -1,4 +1,4 @@
-function offContextMenu() {
-    // off ContextMenu
-    $('body.sub_body').removeAttr('oncontextmenu');
+function enableContextMenu(isOn = true) {
+    // Enable ContextMenu Function
+    window.addEventListener('contextmenu', (e) => e.stopPropagation(), isOn);
 }
