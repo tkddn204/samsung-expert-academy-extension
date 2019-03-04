@@ -1,6 +1,6 @@
 const NODE_PREFIX = 'samsungext';
 const ADDON_CLASS = 'samsungext';
-const SHOW_CLASS = 'samsungext-show';
+const SHOW_CLASS = 'samsungext-submit-result_show';
 
 const STORE = {
     REMEMBER: 'samsungext.remember',

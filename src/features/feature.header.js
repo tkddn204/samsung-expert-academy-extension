@@ -1,7 +1,7 @@
 /**
  * 헤더의 사용자 이름을 화면 크기에 따라 숨기고 표시하는 jquery 함수
  */
-const toggleUserName = () => {
+function toggleUserName() {
     if ($(window).width() < 990) {
         $('.navbar-right').find('.name').hide();
     } else {
@@ -12,7 +12,7 @@ const toggleUserName = () => {
 /**
  * 검색 아이콘을 화면 크기에 따라 숨기고 표시하는 jquery 함수
  */
-const toggleSearchIcon = () => {
+function toggleSearchIcon() {
     if ($(window).width() < 990) {
         $('.navbar-right').find('.input-icon').hide();
     } else {

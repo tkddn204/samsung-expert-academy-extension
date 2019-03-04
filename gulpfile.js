@@ -1,39 +1,37 @@
-const gulp = require('gulp');
-const gutil = require('gulp-util');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const {
-    merge
-} = require('event-stream');
 const map = require('map-stream');
-const {
-    spawn
-} = require('child_process');
-const $ = require('gulp-load-plugins')();
+const merge = require('merge-stream');
+const {spawn} = require('child_process');
+const replaceExt = require('replace-ext');
+const argv = require('minimist')(process.argv.slice(2));
+const through2 = require('through2');
+const {src, dest, series, watch} = require('gulp');
+const gclean = require('gulp-clean');
+const plumber = require('gulp-plumber');
+const less = require('gulp-less');
+const autoprefixer = require('gulp-autoprefixer');
+const zip = require('gulp-zip');
+const replace = require('gulp-replace');
+const crxPack = require('gulp-crx-pack');
+const cssmin = require('gulp-cssmin');
+const concat = require('gulp-concat');
+const preprocess = require('gulp-preprocess');
 const uglify = require('gulp-uglify-es').default;
 
 // Tasks
-gulp.task('clean', () => {
-    return pipe(
-        './tmp',
-        $.clean()
-    );
-});
+function clean() {
+    return src('./tmp', {
+        allowEmpty: true
+    }).pipe(gclean());
+}
 
-gulp.task('build', (cb) => {
-    $.runSequence('clean', 'styles', 'chrome', cb);
-});
+function watches() {
+    return watch(['./libs/**/*', './src/**/*', './package.json'], build);
+}
 
-gulp.task('default', ['build'], () => {
-    gulp.watch(['./libs/**/*', './src/**/*', './package.json'], ['default']);
-});
-
-gulp.task('dist', ['build'], (cb) => {
-    $.runSequence('chrome:zip', 'chrome:crx', cb);
-});
-
-gulp.task('test', ['build'], (cb) => {
+function test(cb) {
     const ps = spawn('./node_modules/.bin/mocha', [
         '--harmony',
         '--reporter',
@@ -46,109 +44,91 @@ gulp.task('test', ['build'], (cb) => {
     ps.stdout.pipe(process.stdout);
     ps.stderr.pipe(process.stderr);
     ps.on('close', cb);
-});
+}
 
-gulp.task('styles', () => {
-    return pipe(
-        './src/styles/samsungext.less',
-        $.plumber(),
-        $.less({
+function styles() {
+    return src('./src/styles/samsungext.less')
+        .pipe(plumber())
+        .pipe(less({
             relativeUrls: true
-        }),
-        $.autoprefixer({
+        }))
+        .pipe(autoprefixer({
             cascade: true
-        }),
-        gutil.env.production && $.cssmin(),
-        './tmp'
-    );
-});
+        }))
+        .pipe(argv.production ? cssmin() : through2.obj())
+        .pipe(dest('./tmp'));
+}
 
 // Chrome
-gulp.task('chrome:template', () => {
+function chromeTemplate() {
     return buildTemplate({
         SUPPORT_FILE_ICONS: true,
         SUPPORT_GHE: true
     });
-});
+}
 
-gulp.task('chrome:js', ['chrome:template'], () => {
+function chromeJS() {
     return buildJs(['./src/config/chrome/overrides.js'], {
         SUPPORT_FILE_ICONS: true,
         SUPPORT_GHE: true
     });
-});
+}
 
-gulp.task('chrome', ['chrome:js'], () => {
-    const dest = './tmp/chrome';
+// Chrome
+function chrome() {
+    const destPath = './tmp/chrome';
     const extRoot = 'chrome-extension://__MSG_@@extension_id__';
     return merge(
-        pipe(
-            './icons/**/*',
-            `${dest}/icons`
-        ),
-        pipe(
-            [
-                './libs/**/*',
-                './tmp/samsungext.*'
-            ],
-            dest
-        ),
-        pipe(
-            './src/config/chrome/background.js',
-            gutil.env.production && uglify(),
-            dest
-        ),
-        pipe(
-            './src/config/chrome/manifest.json',
-            $.replace('$VERSION', getVersion()),
-            dest
-        )
+        src('./icons/**/*')
+        .pipe(dest(`${destPath}/icons`)),
+        src(['./libs/**/*', './tmp/samsungext.*'])
+        .pipe(dest(destPath)),
+        src('./src/config/chrome/background.js')
+        .pipe(argv.production ? uglify() : through2.obj())
+        .pipe(dest(destPath)),
+        src('./src/config/chrome/manifest.json')
+        .pipe(replace('$VERSION', getVersion()))
+        .pipe(dest(destPath))
     );
-});
+}
 
-gulp.task('chrome:zip', () => {
-    return pipe(
-        './tmp/chrome/**/*',
-        $.zip('chrome.zip'),
-        './dist'
-    );
-});
+function chromeZIP() {
+    return src('./tmp/chrome/**/*')
+        .pipe(zip('chrome.zip'))
+        .pipe(dest('./dist'));
+}
 
-gulp.task('chrome:crx', () => {
+function chromeCRX() {
     // This will package the crx using a private key.
     // For the convenience of people who want to build locally without having to
     // Manage their own Chrome key, this code will use the bundled test key if
     // A real key is not found in ~/.ssh.
-    const real = path.join(os.homedir() + '/.ssh/chrome.pem');
+    let real;
+    if (fs.existsSync(path.join(os.homedir() + '/.ssh/chrome.pem'))) {
+        real = path.join(os.homedir() + '/.ssh/chrome.pem');
+    } else {
+        real = './ssh/chrome.pem';
+    }
+    if (argv.production && !fs.existsSync(real)) {
+        console.error('Chrome Key Not Found!!');
+        return null;
+    }
     const test = './chrome_test_key.pem';
     const privateKey = fs.existsSync(real) ? fs.readFileSync(real) : fs.readFileSync(test);
-    return pipe(
-        './tmp/chrome',
-        $.crxPack({
+    return src('./tmp/chrome')
+        .pipe(crxPack({
             privateKey: privateKey,
             filename: 'chrome.crx'
-        }),
-        './dist'
-    );
-});
-
-// Helpers
-function pipe(src, ...transforms) {
-    const work = transforms.filter((t) => !!t).reduce((stream, transform) => {
-        const isDest = typeof transform === 'string';
-        return stream.pipe(isDest ? gulp.dest(transform) : transform).on('error', (err) => {
-            gutil.log(gutil.colors.red('[Error]'), err.toString());
-        });
-    }, gulp.src(src));
-
-    return work;
+        }))
+        .pipe(dest('./dist'));
 }
 
+// Helpers
 function html2js(template) {
     return map(escape);
 
     function escape(file, cb) {
-        const path = $.util.replaceExtension(file.path, '.js');
+        const path = replaceExt(file.path, '.js');
         const content = file.contents.toString();
         /* eslint-disable quotes */
         const escaped = content
@@ -165,42 +145,49 @@ function html2js(template) {
 }
 
 function buildJs(overrides, ctx) {
+    const cores = fs.readdirSync('./src/core').map((name) => './src/core/' + name);
     const features = fs.readdirSync('./src/features').map((name) => './src/features/' + name);
-    const src = [
-            './tmp/template.js',
-            './src/util.async.js',
-            './src/core.constants.js',
-            './src/core.storage.js',
+    const utils = fs.readdirSync('./src/util').map((name) => './src/util/' + name);
+    const srcPaths = [
+            './tmp/template.js'
         ]
         .concat(overrides)
+        .concat(cores)
         .concat(features)
+        .concat(utils)
         .concat('./src/samsungext.js');
-    return pipe(
-        src,
-        $.concat('samsungext.js'),
-        $.preprocess({
+    return src(srcPaths)
+        .pipe(concat('samsungext.js'))
+        .pipe(preprocess({
             context: ctx
-        }),
-        gutil.env.production && uglify(),
-        './tmp'
-    );
+        }))
+        .pipe(argv.production ? uglify() : through2.obj())
+        .pipe(dest('./tmp'));
 }
 
 function buildTemplate(ctx) {
     const LOTS_OF_SPACES = new Array(500).join(' ');
 
-    return pipe(
-        './src/template.html',
-        $.preprocess({
+    return src('./src/template.html')
+        .pipe(preprocess({
             context: ctx
-        }),
-        $.replace('__SPACES__', LOTS_OF_SPACES),
-        html2js('const TEMPLATE = \'$$\''),
-        './tmp'
-    );
+        }))
+        .pipe(replace('__SPACES__', LOTS_OF_SPACES))
+        .pipe(html2js('const TEMPLATE = \'$$\''))
+        .pipe(dest('./tmp'));
 }
 
 function getVersion() {
     delete require.cache[require.resolve('./package.json')];
     return require('./package.json').version;
 }
+
+const chromeTask = series(chromeTemplate, chromeJS, chrome);
+const build = series(clean, styles, chromeTask);
+
+exports.clean = clean;
+exports.build = build;
+exports.default = series(build, watches);
+exports.dist = series(build, chromeZIP, chromeCRX);
+exports.test = series(build, test);
+exports.chrome = chromeTask;
