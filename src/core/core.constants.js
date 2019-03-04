@@ -6,8 +6,8 @@ const STORE = {
     REMEMBER: 'samsungext.remember',
     ICONS: 'samsungext.icons',
     POPUP: 'samsungext.popup_shown',
-    WIDTH: 'samsungext.sidebar_width',
-    SHOWN: 'samsungext.sidebar_shown',
+    WIDTH: 'samsungext.submit_result_width',
+    SHOWN: 'samsungext.submit_result_shown',
 };
 
 const DEFAULTS = {

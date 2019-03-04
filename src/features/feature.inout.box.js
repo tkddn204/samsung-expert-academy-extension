@@ -1,3 +1,25 @@
+function toggleSubmitResultAndSave() {
+    const store = new Storage();
+    console.log(store);
+    store.set(STORE.SHOWN, !isSubmitResultVisible(), () => {
+        toggleSubmitResult();
+    });
+}
+
+function toggleSubmitResult(visibility) {
+    if (visibility !== undefined) {
+        if (isSubmitResultVisible() === visibility) return;
+        toggleSubmitResult();
+    } else {
+        $('.problem_left').toggleClass(SHOW_CLASS);
+        $(document).trigger(EVENT.TOGGLE, isSubmitResultVisible());
+    }
+}
+
+function isSubmitResultVisible() {
+    return $('.problem_left').hasClass(SHOW_CLASS);
+}
+
 function updateInputOutputBox(store) {
     /**
      * Problem Solving page
@@ -65,26 +87,6 @@ function updateInputOutputBox(store) {
             }
             return false;
         });
-
-        function toggleSubmitResultAndSave() {
-            store.set(STORE.SHOWN, !isSidebarVisible(), () => {
-                toggleSubmitResult();
-            });
-        }
-
-        function toggleSubmitResult(visibility) {
-            if (visibility !== undefined) {
-                if (isSubmitResultVisible() === visibility) return;
-                toggleSubmitResult();
-            } else {
-                $('.problem_left').toggleClass(SHOW_CLASS);
-                $(document).trigger(EVENT.TOGGLE, isSubmitResultVisible());
-            }
-        }
-
-        function isSubmitResultVisible() {
-            return $('.problem_left').hasClass(SHOW_CLASS);
-        }
     }
 
     addCopyFunc();

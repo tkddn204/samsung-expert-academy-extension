@@ -28,7 +28,7 @@ function clean() {
 }
 
 function watches() {
-    return watch(['./libs/**/*', './src/**/*', './package.json'], build);
+    return watch(['./libs/**/*', './src/**/*', './package.json'], defaultTask);
 }
 
 function test(cb) {
@@ -151,10 +151,10 @@ function buildJs(overrides, ctx) {
     const srcPaths = [
             './tmp/template.js'
         ]
-        .concat(overrides)
         .concat(cores)
         .concat(features)
         .concat(utils)
+        .concat(overrides)
         .concat('./src/samsungext.js');
     return src(srcPaths)
         .pipe(concat('samsungext.js'))
@@ -173,7 +173,7 @@ function buildTemplate(ctx) {
             context: ctx
         }))
         .pipe(replace('__SPACES__', LOTS_OF_SPACES))
-        .pipe(html2js('const TEMPLATE = \'$$\''))
+        .pipe(html2js('const TEMPLATE = \'$$\';'))
         .pipe(dest('./tmp'));
 }
 
@@ -184,10 +184,11 @@ function getVersion() {
 
 const chromeTask = series(chromeTemplate, chromeJS, chrome);
 const build = series(clean, styles, chromeTask);
+const defaultTask = series(build, watches);
 
 exports.clean = clean;
 exports.build = build;
-exports.default = series(build, watches);
+exports.default = defaultTask;
 exports.dist = series(build, chromeZIP, chromeCRX);
 exports.test = series(build, test);
 exports.chrome = chromeTask;
