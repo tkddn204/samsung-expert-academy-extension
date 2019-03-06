@@ -1,4 +1,3 @@
-
 /**
  * 클립보드 객체를 생성하고, 복사에 성공하면 class 속성이 copy-description인
  * html 엘리먼트의 내용을 바꿈.
@@ -43,24 +42,32 @@ function addCopyFunc() {
         const $outputBox = $inOutBox.children().eq(1);
 
         // 입력 복사 버튼 추가
-        const $inputCopyButton = $('<button>입력 코드 복사</button>');
+        const $inputCopyButton = $('<button>입력 복사</button>');
         $inputCopyButton.appendTo($inputBox.find('.title1'));
-        $inputCopyButton.addClass('copy-code-input');
-        $inputCopyButton.attr({
-            'data-clipboard-target': '.input-code',
-            type: 'button'
-        });
         $inputCopyButton.css('float', 'right');
+        if ($('.problem_title').text().includes('1868')) {
+            $inputCopyButton.click((e) => {
+                e.preventDefault();
+                alert('"파핑파핑 지뢰찾기" 문제의 입력을' +
+                    ' 복사할 때 멈추는 버그가 있어 잠시 막아두었습니다. 불편을 드려 죄송합니다.')
+            });
+        } else {
+            $inputCopyButton.addClass('copy-code-input');
+            $inputCopyButton.attr({
+                'data-clipboard-target': '.input-code',
+                type: 'button'
+            });
+        }
 
         // 출력 복사 버튼 추가
-        const $outputCopyButton = $('<button>출력 코드 복사</button>');
+        const $outputCopyButton = $('<button>출력 복사</button>');
         $outputCopyButton.appendTo($outputBox.find('.title1'));
+        $outputCopyButton.css('float', 'right');
         $outputCopyButton.addClass('copy-code-output');
         $outputCopyButton.attr({
             'data-clipboard-target': '.output-code',
             type: 'button'
         });
-        $outputCopyButton.css('float', 'right');
 
         // TODO: 복사가 실패할 경우 추가
         if ($('.reference_box').length) {

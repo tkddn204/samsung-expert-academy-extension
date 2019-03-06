@@ -1,4 +1,4 @@
-function updateInputOutputBox(store) {
+function updateInputOutputBox() {
     /**
      * Problem Solving page
      */
@@ -40,51 +40,29 @@ function updateInputOutputBox(store) {
         });
 
         // 버튼 클릭 이벤트
-        $button.click(toggleSubmitResultAndSave);
-
         $button.on('click', (e) => {
             e.stopPropagation();
             const $left = $('.problem_left');
             const $right = $('.problem_right');
-            if ($left.hasClass(SHOW_CLASS)) {
-                $left.removeClass(SHOW_CLASS);
-                $right.css({
-                    'left': '0px',
-                    'right': '0px',
-                    'bottom': '0px'
-                });
-                $button.text('▶');
-            } else {
-                $left.removeClass(ADD_CLASS);
+            if ($left.css('visibility') === 'hidden') {
+                $left.css('visibility', 'visible');
                 $right.css({
                     'left': '385px',
                     'right': '0px',
                     'bottom': '0px'
                 });
                 $button.text('◀');
+            } else {
+                $left.css('visibility', 'hidden');
+                $right.css({
+                    'left': '0px',
+                    'right': '0px',
+                    'bottom': '0px'
+                });
+                $button.text('▶');
             }
             return false;
         });
-
-        function toggleSubmitResultAndSave() {
-            store.set(STORE.SHOWN, !isSidebarVisible(), () => {
-                toggleSubmitResult();
-            });
-        }
-
-        function toggleSubmitResult(visibility) {
-            if (visibility !== undefined) {
-                if (isSubmitResultVisible() === visibility) return;
-                toggleSubmitResult();
-            } else {
-                $('.problem_left').toggleClass(SHOW_CLASS);
-                $(document).trigger(EVENT.TOGGLE, isSubmitResultVisible());
-            }
-        }
-
-        function isSubmitResultVisible() {
-            return $('.problem_left').hasClass(SHOW_CLASS);
-        }
     }
 
     addCopyFunc();
