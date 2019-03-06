@@ -1,4 +1,30 @@
+<<<<<<< HEAD
 function updateInputOutputBox() {
+=======
+function toggleSubmitResultAndSave() {
+    const store = new Storage();
+    console.log(store);
+    store.set(STORE.SHOWN, !isSubmitResultVisible(), () => {
+        toggleSubmitResult();
+    });
+}
+
+function toggleSubmitResult(visibility) {
+    if (visibility !== undefined) {
+        if (isSubmitResultVisible() === visibility) return;
+        toggleSubmitResult();
+    } else {
+        $('.problem_left').toggleClass(SHOW_CLASS);
+        $(document).trigger(EVENT.TOGGLE, isSubmitResultVisible());
+    }
+}
+
+function isSubmitResultVisible() {
+    return $('.problem_left').hasClass(SHOW_CLASS);
+}
+
+function updateInputOutputBox(store) {
+>>>>>>> 9e47efa1d75c6232492f131a952c4d3dae7e84bc
     /**
      * Problem Solving page
      */
