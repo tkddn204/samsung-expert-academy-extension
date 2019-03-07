@@ -7,5 +7,8 @@ function updateMyPage() {
         $tab.find('li').children().css('min-width', '100%');
 
         // Todo: mypage 화면 개선
+        const $content = $myPageContainer.find('.tabcon');
+        $content.css('display', 'flex');
+        $content.find('.right').css('flex-grow', '1');
     }
 }

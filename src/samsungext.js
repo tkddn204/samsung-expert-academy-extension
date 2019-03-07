@@ -7,6 +7,7 @@ $(document).ready(() => {
         enableContextMenu();
         updateHeader();
         updateMyPage();
+        updateSolvingClub();
         updateSearchBar();
         updateSolvePage();
         updateInputOutputBox(store);

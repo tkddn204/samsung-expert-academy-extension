@@ -34,6 +34,22 @@ function getBoxText($box) {
     return text.replace(/\t/g, '');
 }
 
+function getInOutputText(inOutPut, text) {
+    $.ajax({
+        url: $('.down_area').first().find('a[href*="?"]').attr('href')
+    }).done((data) => {
+        const $downBtn = $(inOutPut);
+        $downBtn.attr({
+            'data-clipboard-text': data,
+        });
+        setClipboardEvent(new ClipboardJS(inOutPut), text);
+    }).fail((error) => {
+        const $downBtn = $(inOutPut);
+        console.error(error);
+        $downBtn.attr('disabled', true);
+    });
+}
+
 function addCopyFunc() {
     /**
      * Input/Output Copy function
@@ -92,7 +108,6 @@ function addCopyFunc() {
 
                 // 입력
                 $inputDownArea.css('display', 'flex');
-                $inputDownArea.find('a').eq(1).css('flex-grow', 1);
 
                 const $realInputCopyButton = $('<button>내부 입력 복사</button>');
                 $realInputCopyButton.css('float', 'right');
@@ -100,11 +115,9 @@ function addCopyFunc() {
                     'id': 'down-input',
                     'type': 'button'
                 });
-                $realInputCopyButton.appendTo($inputBox.find('.down_area'));
 
                 // 출력
                 $outputDownArea.css('display', 'flex');
-                $outputDownArea.find('a').eq(1).css('flex-grow', 1);
 
                 const $realOutputCopyButton = $('<button>내부 출력 복사</button>');
                 $realOutputCopyButton.css('float', 'right');
@@ -112,37 +125,22 @@ function addCopyFunc() {
                     'id': 'down-output',
                     'type': 'button'
                 });
+
+                $realInputCopyButton.appendTo($inputBox.find('.down_area'));
                 $realOutputCopyButton.appendTo($outputBox.find('.down_area'));
 
+                if ($('.icon_file_download').length) {
+                    $inputDownArea.find('a').css('flex-grow', 1);
+                    $outputDownArea.find('a').css('flex-grow', 1);
+                } else {
+                    $inputDownArea.find('a').eq(1).css('flex-grow', 1);
+                    $outputDownArea.find('a').eq(1).css('flex-grow', 1);
+                }
 
                 // Ajax로 파일(input/output.txt)을 다운받아,
                 // 'data-clipboard-text'에 저장해 둠.
-                $.ajax({
-                    url: $('.down_area').first().find('a[href*="?"]').attr('href')
-                }).done((data) => {
-                    const $downBtn = $('#down-input');
-                    $downBtn.attr({
-                        'data-clipboard-text': data,
-                    });
-                    setClipboardEvent(new ClipboardJS('#down-input'), '내부 입력 복사 완료!!');
-                }).fail((error) => {
-                    const $downBtn = $('#down-input');
-                    console.error(error);
-                    $downBtn.attr('disabled', true);
-                });
-                $.ajax({
-                    url: $('.down_area').eq(1).find('a[href*="?"]').attr('href')
-                }).done((data) => {
-                    const $downBtn = $('#down-output');
-                    $downBtn.attr({
-                        'data-clipboard-text': data,
-                    });
-                    setClipboardEvent(new ClipboardJS('#down-output'), '내부 출력 복사 완료!!');
-                }).fail((error) => {
-                    const $downBtn = $('#down-output');
-                    console.error(error);
-                    $downBtn.attr('disabled', true);
-                });
+                getInOutputText('#down-input', '내부 입력 복사 완료!!');
+                getInOutputText('#down-output', '내부 출력 복사 완료!!');
             }
         }
         // 입력 복사 버튼 추가

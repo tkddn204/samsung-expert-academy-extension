@@ -1,6 +1,5 @@
 function toggleSubmitResultAndSave() {
     const store = new Storage();
-    console.log(store);
     store.set(STORE.SHOWN, !isSubmitResultVisible(), () => {
         toggleSubmitResult();
     });
@@ -63,6 +62,8 @@ function updateInputOutputBox(store) {
 
         // 버튼 클릭 이벤트
         $button.click(toggleSubmitResultAndSave);
+        key.filter = () => $button.is(':visible');
+        key(store.get(STORE.HOTKEYS), toggleSubmitResultAndSave);
 
         $button.on('click', (e) => {
             e.stopPropagation();

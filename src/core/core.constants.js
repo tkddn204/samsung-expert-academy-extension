@@ -3,6 +3,7 @@ const ADDON_CLASS = 'samsungext';
 const SHOW_CLASS = 'samsungext-submit-result_show';
 
 const STORE = {
+    HOTKEYS: 'samsungext.hotkeys',
     REMEMBER: 'samsungext.remember',
     ICONS: 'samsungext.icons',
     POPUP: 'samsungext.popup_shown',
@@ -11,7 +12,7 @@ const STORE = {
 };
 
 const DEFAULTS = {
-    TOKEN: '',
+    HOTKEYS: 'tab',
     REMEMBER: true,
     ICONS: true,
     POPUP: false,
