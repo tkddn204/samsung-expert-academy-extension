@@ -4,8 +4,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     }
 
     chrome.tabs.executeScript(
-        tabId,
-        {
+        tabId, {
             code: 'var injected = window.samsungextInjected; window.samsungextInjected = true; injected;',
             runAt: 'document_start'
         },
@@ -14,8 +13,8 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
             if (chrome.runtime.lastError || res[0]) {
                 return;
             }
-            
-            // const cssFiles = ['file-icons.css'];
+
+            const cssFiles = ['samsungext.css'];
 
             const jsFiles = [
                 'jquery.js',
@@ -26,7 +25,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
             ];
 
             eachTask([
-                // (cb) => eachItem(cssFiles, inject('insertCSS'), cb),
+                (cb) => eachItem(cssFiles, inject('insertCSS'), cb),
                 (cb) => eachItem(jsFiles, inject('executeScript'), cb)
             ]);
 
