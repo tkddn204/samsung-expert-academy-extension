@@ -29,7 +29,7 @@
         "jpm": "^1.0.4",
         "map-stream": "*",
         "merge-stream": "^1.0.1",
-        "minimist": "^1.2.0",
+        "minimist": "^1.2.3",
         "mocha": "2.0.1",
         "replace-ext": "^1.0.0",
         "request": "^2.88.0",
