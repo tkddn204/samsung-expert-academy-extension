@@ -37,7 +37,7 @@
         "starx": "~0.1.7",
         "stream-series": "*",
         "through2": "^3.0.1",
-        "underscore": "~1.7.0",
+        "underscore": "~1.12.1",
         "underscore.string": "~2.4.0"
     },
     "scripts": {
