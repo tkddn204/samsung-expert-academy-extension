@@ -4,7 +4,7 @@
     "private": true,
     "main": "inject.js",
     "devDependencies": {
-        "async": "~0.9.0",
+        "async": "~2.6.4",
         "chromedriver": "^2.21.2",
         "crx": "^0.4.4",
         "cryptiles": "^4.1.3",
